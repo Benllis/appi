@@ -1,2 +1,19 @@
 # Auto detect text files and perform LF normalization
-* text=.env
+# Archivos de Node.js
+node_modules/
+.npm
+package-lock.json
+npm-debug.log*
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+dist/
