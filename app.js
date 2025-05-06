@@ -20,3 +20,5 @@ app.use('/api/usuarios', require('./routes/usuarios.routes'));
 app.use('/api/productos', require('./routes/productos.routes'));
 app.use('/api/marcas', require('./routes/marcas.routes'));
 app.use('/api/pedidos', require('./routes/pedidos.routes'));
+app.use('/api/inventario', require('./routes/inventario.routes'));
+app.use('/api/historial', require('./routes/historialCompra.routes'));

@@ -12,7 +12,7 @@ const Pedido = {
         },
         (err, results) => {
           if (err) return reject(err);
-          resolve(results.insertId); // Retorna el ID del nuevo pedido
+          resolve(results.insertId); 
         }
       );
     });

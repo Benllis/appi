@@ -6,14 +6,12 @@ module.exports = {
     const transaction = await connection.promise().beginTransaction();
     
     try {
-      // 1. Crear el pedido principal
       const { id_usuario, items, ...pedidoData } = req.body;
       const pedidoId = await Pedido.create({
         ...pedidoData,
         id_usuario
       });
 
-      // 2. Crear cada item del detalle
       for (const item of items) {
         await DetallePedido.create({
           id_pedido: pedidoId,
@@ -24,10 +22,8 @@ module.exports = {
         });
       }
 
-      // 3. Confirmar la transacción
       await transaction.commit();
 
-      // 4. Obtener y devolver el pedido completo
       const pedidoCompleto = await Pedido.getById(pedidoId);
       const detalles = await DetallePedido.getByPedido(pedidoId);
 
@@ -65,8 +61,7 @@ module.exports = {
   getPedidosByUser: async (req, res) => {
     try {
       const pedidos = await Pedido.getByUser(req.params.userId);
-      
-      // Obtener detalles para cada pedido
+
       const pedidosCompletos = await Promise.all(
         pedidos.map(async (pedido) => {
           const detalles = await DetallePedido.getByPedido(pedido.id_pedido);
@@ -108,10 +103,8 @@ module.exports = {
     const transaction = await connection.promise().beginTransaction();
     
     try {
-      // 1. Eliminar detalles primero (por restricciones de clave foránea)
       await DetallePedido.deleteByPedido(req.params.id);
-      
-      // 2. Eliminar el pedido
+
       const eliminado = await Pedido.delete(req.params.id);
       
       if (!eliminado) {
