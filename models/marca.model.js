@@ -1,7 +1,6 @@
 const connection = require('../config/config');
 
 const Marca = {
-
     getAll: () => {
         return new Promise((resolve, reject) => {
             connection.query('SELECT * FROM MARCA', (err, results) => {
@@ -61,7 +60,7 @@ const Marca = {
                     resolve(results.affectedRows > 0);
                 }
             );
-        });
+        }); 
     }
 };
 

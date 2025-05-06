@@ -1,7 +1,6 @@
 const Marca = require('../models/marca.model');
 
 module.exports = {
-    // Obtener todas las marcas
     getAllMarcas: async (req, res) => {
         try {
             const marcas = await Marca.getAll();
@@ -12,7 +11,6 @@ module.exports = {
         }
     },
 
-    // Obtener marca por ID
     getMarcaById: async (req, res) => {
         try {
             const marca = await Marca.getById(req.params.id);
@@ -26,7 +24,6 @@ module.exports = {
         }
     },
 
-    // Crear nueva marca
     createMarca: async (req, res) => {
         try {
             const nuevaMarca = await Marca.create(req.body);
@@ -37,7 +34,6 @@ module.exports = {
         }
     },
 
-    // Actualizar marca
     updateMarca: async (req, res) => {
         try {
             const actualizado = await Marca.update(req.params.id, req.body);
@@ -51,7 +47,6 @@ module.exports = {
         }
     },
 
-    // Eliminar marca
     deleteMarca: async (req, res) => {
         try {
             const eliminado = await Marca.delete(req.params.id);

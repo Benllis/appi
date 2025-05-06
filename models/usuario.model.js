@@ -1,7 +1,6 @@
 const connection = require('../config/config');
 
 const Usuario = {
-    // Obtener todos los usuarios
     getAll: () => {
         return new Promise((resolve, reject) => {
             connection.query('SELECT * FROM USUARIO', (err, results) => {
@@ -11,7 +10,6 @@ const Usuario = {
         });
     },
 
-    // Obtener por ID
     getById: (id) => {
         return new Promise((resolve, reject) => {
             connection.query(
@@ -25,7 +23,6 @@ const Usuario = {
         });
     },
 
-    // Crear usuario
     create: (userData) => {
         return new Promise((resolve, reject) => {
             connection.query(
@@ -39,7 +36,6 @@ const Usuario = {
         });
     },
 
-    // Actualizar usuario
     update: (id, userData) => {
         return new Promise((resolve, reject) => {
             connection.query(
@@ -53,7 +49,6 @@ const Usuario = {
         });
     },
 
-    // Eliminar usuario
     delete: (id) => {
         return new Promise((resolve, reject) => {
             connection.query(
