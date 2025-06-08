@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil de Usuario</title>
+</head>
+<body>
+  <h1>Bienvenido, <%= usuario.pnombre %> <%= usuario.appaterno %></h1>
+    <a href="/inicio">⬅ Volver al inicio</a>
+    <% if (direccion) { %>
+        <h2>Tu dirección:</h2>
+        <p><strong>Nº:</strong> <%= direccion.direccion %></p>
+        <p><strong>Comuna:</strong> <%= direccion.comuna %></p>
+        <p><strong>Región:</strong> <%= direccion.region %></p>
+    <% } else { %>
+        <p>No se encontró la dirección.</p>
+    <% } %>
+
+    <a href="/logout">Cerrar sesión</a>
+</body>
+</html>

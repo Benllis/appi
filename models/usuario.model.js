@@ -1,66 +1,11 @@
-const connection = require('../config/config');
+const db = require('../config/db');
 
-const Usuario = {
-    getAll: () => {
-        return new Promise((resolve, reject) => {
-            connection.query('SELECT * FROM USUARIO', (err, results) => {
-                if (err) return reject(err);
-                resolve(results);
-            });
-        });
-    },
+async function obtenerUsuarios() {
+  const [rows] = await db.promise().query('SELECT * FROM USUARIO');
+  console.log(rows);
+  return rows;
+}
 
-    getById: (id) => {
-        return new Promise((resolve, reject) => {
-            connection.query(
-                'SELECT * FROM USUARIO WHERE id_usuario = ?', 
-                [id], 
-                (err, results) => {
-                    if (err) return reject(err);
-                    resolve(results[0] || null);
-                }
-            );
-        });
-    },
-
-    create: (userData) => {
-        return new Promise((resolve, reject) => {
-            connection.query(
-                'INSERT INTO USUARIO SET ?',
-                [userData],
-                (err, results) => {
-                    if (err) return reject(err);
-                    resolve({ id: results.insertId, ...userData });
-                }
-            );
-        });
-    },
-
-    update: (id, userData) => {
-        return new Promise((resolve, reject) => {
-            connection.query(
-                'UPDATE USUARIO SET ? WHERE id_usuario = ?',
-                [userData, id],
-                (err, results) => {
-                    if (err) return reject(err);
-                    resolve(results.affectedRows > 0);
-                }
-            );
-        });
-    },
-
-    delete: (id) => {
-        return new Promise((resolve, reject) => {
-            connection.query(
-                'DELETE FROM USUARIO WHERE id_usuario = ?',
-                [id],
-                (err, results) => {
-                    if (err) return reject(err);
-                    resolve(results.affectedRows > 0);
-                }
-            );
-        });
-    }
+module.exports = {
+  obtenerUsuarios
 };
-
-module.exports = Usuario;

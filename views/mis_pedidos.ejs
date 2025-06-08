@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mis Pedidos</title>
+  <style>
+    .detalles {
+      display: none;
+      margin-left: 20px;
+    }
+    .pedido {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+      padding: 10px;
+    }
+    .toggle {
+      cursor: pointer;
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mis Pedidos</h1>
+  <a href="/inicio">⬅ Volver al inicio</a>
+    <% pedidos.forEach(pedido => { %>
+        <div class="pedido">
+            <div class="toggle" onclick="toggleDetalles(<%= pedido.id_pedido %>)">
+            🔽 Pedido - <%= pedido.fecha.toISOString().slice(0, 10) %> - Estado: <%= pedido.name_estado %> - Total: $<%= pedido.monto_total %>
+            </div>
+
+            <% if (pedido.name_estado === 'Pendiente') { %>
+            <form action="/cancelar-pedido/<%= pedido.id_pedido %>" method="POST" onsubmit="return confirm('¿Seguro que deseas cancelar este pedido?');">
+                <button type="submit">❌ Cancelar Pedido</button>
+            </form>
+            <% } %>
+
+            <div id="detalles-<%= pedido.id_pedido %>" class="detalles">
+            <ul>
+                <% detallesPorPedido[pedido.id_pedido].forEach(detalle => { %>
+                <li><%= detalle.nombre %> - Cantidad: <%= detalle.cantidad %> - Precio: $<%= detalle.precio_unitario %></li>
+                <% }) %>
+            </ul>
+            </div>
+        </div>
+    <% }) %>
+
+
+  <script>
+    function toggleDetalles(id) {
+      const el = document.getElementById('detalles-' + id);
+      el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>
