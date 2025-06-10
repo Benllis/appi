@@ -1,17 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Inicio</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Inicio tienda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#000',
+                        secondary: '#f7f9fc',
+                        accent: '#e9edf2',
+                        placeholder: '#d0d4da',
+                    },
+                    borderRadius: {
+                        'xl': '10px',
+                        '2xl': '20px',
+                        'full': '25px',
+                    },
+                    boxShadow: {
+                        'sm': '0 2px 5px rgba(0,0,0,0.05)',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-  <h1>Bienvenido, <%= usuario.pnombre %> <%= usuario.appaterno %></h1>
+<body class="bg-secondary font-sans text-gray-800">
+    <!-- Header -->
+    <header class="flex justify-between items-center px-20 py-5 bg-white shadow-sm">
+        <div class="text-2xl font-bold">FERRETERÍA</div>
+        <nav class="flex space-x-15">
+            <a href="/mis-pedidos" class="font-medium">MIS PEDIDOS</a>
+            <a href="/tienda" class="font-medium">TIENDA</a>
+        </nav>
+        <a href="/logout">
+            <button class="bg-primary text-white px-5 py-2.5 rounded-full font-bold">
+                Cerrar sesión
+            </button>
+        </a>
+    </header>
 
-  <ul>
-    <li><a href="/perfil">Ver perfil</a></li>
-    <li><a href="/mis-pedidos">Mis pedidos</a></li>
-    <li><a href="/tienda">Tienda</a></li>
-    <li><a href="/logout">Cerrar sesión</a></li>
-  </ul>
+    <!-- Hero Section -->
+    <section class="flex justify-between items-center px-20 py-15 bg-accent rounded-2xl max-w-6xl mx-auto my-10">
+        <div class="max-w-lg">
+            <div class="flex flex-col items-center mb-5">
+                <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center font-bold my-2.5">1</div>
+                <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center font-bold my-2.5">2</div>
+                <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center font-bold my-2.5">3</div>
+            </div>
+            <div>
+                <small class="text-sm">Prueba</small>
+                <h1 class="text-4xl font-bold my-5">Prueba</h1>
+                <button class="bg-primary text-white px-5 py-2.5 rounded-full font-bold mt-5">
+                    Prueba
+                </button>
+            </div>
+        </div>
+        <div class="w-[400px] h-[250px] bg-placeholder rounded-xl flex items-center justify-center text-2xl text-gray-600">
+            imagen
+        </div>
+    </section>
+
+    <!-- More Info Section -->
+    <section class="flex justify-between items-center max-w-6xl mx-auto my-5 px-20 py-5">
+        <div class="font-bold">Más información →</div>
+        <div class="flex items-center">
+            <div class="w-12 h-12 bg-placeholder rounded-xl ml-2.5"></div>
+            <div class="w-12 h-12 bg-placeholder rounded-xl ml-2.5"></div>
+            <div class="w-12 h-12 bg-placeholder rounded-xl ml-2.5"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="flex justify-center items-center py-5 bg-white border-t border-gray-300 mt-10">
+        <!-- Footer content here -->
+    </footer>
 </body>
 </html>
