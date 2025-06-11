@@ -33,13 +33,24 @@
     </script>
 </head>
 <body class="bg-secondary font-sans text-gray-800">
-    <!-- Header -->
+    <!-- Header con buscador -->
     <header class="flex justify-between items-center px-20 py-5 bg-white shadow-sm">
         <div class="text-2xl font-bold">FERRETERÍA</div>
-        <nav class="flex space-x-15">
-            <a href="/mis-pedidos" class="font-medium">MIS PEDIDOS</a>
-            <a href="/tienda" class="font-medium">TIENDA</a>
-        </nav>
+        
+        <!-- Barra de búsqueda -->
+        <div class="relative w-1/3">
+            <input 
+                type="text" 
+                placeholder="Buscar productos..." 
+                class="w-full py-2 px-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+            >
+            <button class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </button>
+        </div>
+        
         <a href="/logout">
             <button class="bg-primary text-white px-5 py-2.5 rounded-full font-bold">
                 Cerrar sesión
@@ -48,23 +59,23 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="flex justify-between items-center px-20 py-15 bg-accent rounded-2xl max-w-6xl mx-auto my-10">
-        <div class="max-w-lg">
-            <div class="flex flex-col items-center mb-5">
-                <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center font-bold my-2.5">1</div>
-                <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center font-bold my-2.5">2</div>
-                <div class="w-10 h-10 border-2 border-black rounded-full flex items-center justify-center font-bold my-2.5">3</div>
+    <section class="flex justify-between items-center px-10 py-10 bg-accent rounded-2xl max-w-6xl mx-auto my-8">
+        <div class="max-w-md pl-6">
+            <div class="flex flex-col items-center mb-4">
+                <div class="w-8 h-8 border-2 border-black rounded-full flex items-center justify-center font-bold my-1.5 text-sm">1</div>
+                <div class="w-8 h-8 border-2 border-black rounded-full flex items-center justify-center font-bold my-1.5 text-sm">2</div>
+                <div class="w-8 h-8 border-2 border-black rounded-full flex items-center justify-center font-bold my-1.5 text-sm">3</div>
             </div>
             <div>
-                <small class="text-sm">Prueba</small>
-                <h1 class="text-4xl font-bold my-5">Prueba</h1>
-                <button class="bg-primary text-white px-5 py-2.5 rounded-full font-bold mt-5">
+                <small class="text-xs">Prueba</small>
+                <h1 class="text-3xl font-bold my-3">Prueba</h1>
+                <button class="bg-primary text-white px-4 py-1.5 rounded-full font-bold mt-3 text-sm hover:bg-primary-dark transition-colors">
                     Prueba
                 </button>
             </div>
         </div>
-        <div class="w-[400px] h-[250px] bg-placeholder rounded-xl flex items-center justify-center text-2xl text-gray-600">
-            imagen
+        <div class="w-[350px] h-[200px] bg-placeholder rounded-xl flex items-center justify-center text-xl text-gray-600 mr-6">
+            Imagen
         </div>
     </section>
 
