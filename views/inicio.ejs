@@ -11,6 +11,9 @@
     <li><a href="/perfil">Ver perfil</a></li>
     <li><a href="/mis-pedidos">Mis pedidos</a></li>
     <li><a href="/tienda">Tienda</a></li>
+    <% if (usuario.id_rol == 1 || usuario.id_rol == 2) { %>
+      <li><a href="/gestion-pedidos">Pedidos</a></li>
+    <% } %>
     <li><a href="/logout">Cerrar sesión</a></li>
   </ul>
 </body>

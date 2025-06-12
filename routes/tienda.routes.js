@@ -1,6 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
+const { checkRol } = require('../middlewares/auth');
+
+// Vista para admin y vendedor
+router.get('/gestion-pedidos', checkRol([1, 2]), async (req, res) => {
+  try {
+    const [pedidos] = await db.promise().query(`
+      SELECT 
+        p.id_pedido, u.pnombre, u.appaterno, p.fecha, p.monto_total, e.name_estado
+      FROM PEDIDO p
+      JOIN USUARIO u ON p.id_usuario = u.id_usuario
+      JOIN ESTADO e ON p.id_estado = e.id_estado
+    `);
+
+    res.render('gestion_pedidos', {
+      pedidos,
+      usuario: req.session.usuario,
+    });
+  } catch (error) {
+    console.error('Error al obtener pedidos:', error);
+    res.status(500).send('Error al cargar pedidos');
+  }
+});
 
 const axios = require('axios');
 // Ver productos en tienda
