@@ -1,57 +1,16 @@
 const Usuario = require('../models/usuario.model');
 
+const renderUsuariosPage = async (req, res) => {
+  try {
+    const usuarios = await Usuario.obtenerUsuarios(); // ← usa el nombre correcto
+    res.render('usuario', { usuarios }); // asegúrate que la vista sea 'usuarios.ejs'
+  } catch (error) {
+    console.error('Error al obtener usuarios 1:', error);
+    res.status(500).send('Error al obtener los usuarios IDK');
+  }
+};
+
 module.exports = {
-    getAllUsers: async (req, res) => {
-        try {
-            const users = await Usuario.getAll();
-            res.json(users);
-        } catch (err) {
-            res.status(500).json({ error: err.message });
-        }
-    },
-
-    getUserById: async (req, res) => {
-        try {
-            const user = await Usuario.getById(req.params.id);
-            if (!user) {
-                return res.status(404).json({ error: 'Usuario no encontrado' });
-            }
-            res.json(user);
-        } catch (err) {
-            res.status(500).json({ error: err.message });
-        }
-    },
-
-    createUser: async (req, res) => {
-        try {
-            const newUser = await Usuario.create(req.body);
-            res.status(201).json(newUser);
-        } catch (err) {
-            res.status(400).json({ error: err.message });
-        }
-    },
-
-    updateUser: async (req, res) => {
-        try {
-            const updated = await Usuario.update(req.params.id, req.body);
-            if (!updated) {
-                return res.status(404).json({ error: 'Usuario no encontrado' });
-            }
-            res.json({ message: 'Usuario actualizado' });
-        } catch (err) {
-            res.status(400).json({ error: err.message });
-        }
-    },
-
-    deleteUser: async (req, res) => {
-        try {
-            const deleted = await Usuario.delete(req.params.id);
-            if (!deleted) {
-                return res.status(404).json({ error: 'Usuario no encontrado' });
-            }
-            res.json({ message: 'Usuario eliminado' });
-        } catch (err) {
-            res.status(500).json({ error: err.message });
-        }
-    }
+  renderUsuariosPage,
+  // otros controladores...
 };

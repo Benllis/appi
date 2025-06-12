@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resultado de Pago</title>
+</head>
+<body>
+    <h1>Resultado de la Transacción</h1>
+    <div>
+        <p><strong>Estado:</strong> {{ response.status }}</p>
+        <p><strong>Orden de compra:</strong> {{ response.buy_order }}</p>
+        <p><strong>Monto:</strong> ${{ response.amount }}</p>
+        <p><strong>Fecha:</strong> {{ response.transaction_date }}</p>
+    </div>
+    <a href="/">Volver al inicio</a>
+</body>
+</html>
