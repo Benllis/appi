@@ -2,6 +2,7 @@ const db = require('../config/db');
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
+const { checkRol } = require('../middlewares/auth');
 
 router.get('/login', authController.mostrarLogin);
 router.post('/login', authController.procesarLogin);
@@ -45,6 +46,32 @@ router.get('/logout', (req, res) => {
     }
     res.redirect('/login');
   });
+});
+
+
+router.post('/actualizar-estado/:id', checkRol([1, 2]), async (req, res) => {
+  const idPedido = req.params.id;
+  const nuevoEstado = req.body.nuevo_estado;
+  const rolUsuario = req.session.usuario.id_rol;
+
+  try {
+    // Validaciones
+    if (rolUsuario === 2 && nuevoEstado !== 'Pendiente') {
+      return res.status(403).send('El vendedor solo puede cambiar a Pendiente');
+    }
+
+    // Actualizar el estado
+    await db.promise().query(`
+      UPDATE PEDIDO 
+      SET id_estado = (SELECT id_estado FROM ESTADO WHERE name_estado = ?)
+      WHERE id_pedido = ?
+    `, [nuevoEstado, idPedido]);
+
+    res.redirect('/gestion-pedidos');
+  } catch (error) {
+    console.error('Error actualizando estado:', error);
+    res.status(500).send('Error al actualizar estado');
+  }
 });
 
 module.exports = router;

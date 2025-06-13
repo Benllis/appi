@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Datos CMF</title>
+</head>
+<body>
+    <h1>Consulta de Indicadores CMF</h1>
+    
+    <form method="get">
+        <input type="date" name="date" value="{{ selected_date }}">
+        <button type="submit">Buscar</button>
+    </form>
+    
+    <h2>Valores UF</h2>
+    {% if uf_data %}
+        <table border="1">
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+            </tr>
+            {% for uf in uf_data %}
+            <tr>
+                <td>{{ uf.Fecha }}</td>
+                <td>{{ uf.Valor }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No se encontraron datos de UF</p>
+    {% endif %}
+    
+    <h2>Valores Dólar</h2>
+    {% if dollar_data %}
+        <table border="1">
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+            </tr>
+            {% for dollar in dollar_data %}
+            <tr>
+                <td>{{ dollar.Fecha }}</td>
+                <td>{{ dollar.Valor }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No se encontraron datos del dólar</p>
+    {% endif %}
+    
+    <a href="/">Volver al inicio</a>
+</body>
+</html>

@@ -1,0 +1,8 @@
+2025-06-12 14:16:48,190 INFO: Aplicación iniciada [in C:\Users\Benllis\Desktop\ApiEv\transbank\app\__init__.py:27]
+2025-06-12 14:16:54,579 INFO: Aplicación iniciada [in C:\Users\Benllis\Desktop\ApiEv\transbank\app\__init__.py:27]
+2025-06-12 14:17:11,682 INFO: Iniciando proceso de pago [in C:\Users\Benllis\Desktop\ApiEv\transbank\app\routes.py:23]
+2025-06-12 14:17:11,693 INFO: Datos de transacción - Monto: 2400000, Orden: TEST_20250612141711, Sesión: SESSION_1749752231.693086 [in C:\Users\Benllis\Desktop\ApiEv\transbank\app\routes.py:30]
+2025-06-12 14:17:11,693 INFO: URL de retorno: http://localhost:5000/payment-result [in C:\Users\Benllis\Desktop\ApiEv\transbank\app\routes.py:31]
+2025-06-12 14:17:12,095 INFO: Respuesta de WebPay recibida correctamente [in C:\Users\Benllis\Desktop\ApiEv\transbank\app\routes.py:41]
+2025-06-12 14:17:12,095 INFO: URL de redirección: https://webpay3gint.transbank.cl/webpayserver/initTransaction [in C:\Users\Benllis\Desktop\ApiEv\transbank\app\routes.py:42]
+2025-06-12 14:17:12,096 INFO: Token: https://webpay3gint.transbank.cl/webpayserver/initTransaction?token_ws=01abbf1740bf0fe39068f7480b8143462c254c8d30c9c1a5bd2ee5723a58406f [in C:\Users\Benllis\Desktop\ApiEv\transbank\app\routes.py:43]

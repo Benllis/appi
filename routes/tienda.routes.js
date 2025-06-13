@@ -2,6 +2,31 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 
+const { checkRol } = require('../middlewares/auth');
+
+// Vista para admin y vendedor
+router.get('/gestion-pedidos', checkRol([1, 2]), async (req, res) => {
+  try {
+    const [pedidos] = await db.promise().query(`
+      SELECT 
+        p.id_pedido, u.pnombre, u.appaterno, p.fecha, p.monto_total, e.name_estado
+      FROM PEDIDO p
+      JOIN USUARIO u ON p.id_usuario = u.id_usuario
+      JOIN ESTADO e ON p.id_estado = e.id_estado
+    `);
+
+    res.render('gestion_pedidos', {
+      pedidos,
+      usuario: req.session.usuario,
+    });
+  } catch (error) {
+    console.error('Error al obtener pedidos:', error);
+    res.status(500).send('Error al cargar pedidos');
+  }
+});
+
+const axios = require('axios');
+
 // Ver productos en tienda
 router.get('/tienda', async (req, res) => {
   try {
@@ -123,40 +148,30 @@ router.post('/confirmar', async (req, res) => {
     return res.redirect('/login');
   }
 
-  const userId = req.session.usuario.id_usuario;
+
   const carrito = req.session.carro;
-  let total = 0;
-  carrito.forEach(p => total += p.precio * p.cantidad);
+  const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+  const retiro_domicilio = req.body.retiro_domicilio === '1' ? '1' : '0';
 
-  const conn = await db.promise().getConnection();
-  try {
-    await conn.beginTransaction();
+  const qs = require('qs');
 
-    const [pedido] = await conn.query(`
-      INSERT INTO PEDIDO (id_usuario, fecha, monto_total, id_estado)
-      VALUES (?, NOW(), ?, (SELECT id_estado FROM ESTADO WHERE name_estado = 'Pendiente'))
-    `, [userId, total]);
-
-    const idPedido = pedido.insertId;
-
-    for (const item of carrito) {
-      await conn.query(`
-        INSERT INTO DETALLE_PEDIDO (id_pedido, id_producto, cantidad, precio_unitario)
-        VALUES (?, ?, ?, ?)
-      `, [idPedido, item.id_producto, item.cantidad, item.precio]);
-
-      await conn.query(`UPDATE INVENTARIO SET stock = stock - ? WHERE id_producto = ?`, [item.cantidad, item.id_producto]);
+try {
+  const response = await axios.post(
+    'http://localhost:5000/payment',
+    qs.stringify({ amount: total }),
+    {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     }
+  );
+    req.session.retiro_domicilio = retiro_domicilio;
 
-    await conn.commit();
-    req.session.carro = [];
-    res.redirect('/mis-pedidos');
-  } catch (err) {
-    await conn.rollback();
-    console.error('Error al confirmar compra:', err);
-    res.status(500).send('Error al confirmar la compra');
-  } finally {
-    conn.release();
+    res.redirect(response.request.res.responseUrl);
+  } catch (error) {
+    console.error('Error al conectar con Transbank:', error);
+    res.status(500).send('No se pudo iniciar el pago');
+
   }
 });
 
@@ -185,7 +200,11 @@ router.get('/mis-pedidos', async (req, res) => {
       detallesPorPedido[pedido.id_pedido] = detalles;
     }
 
-    res.render('mis_pedidos', { pedidos, detallesPorPedido });
+    const mensaje = req.session.mensaje_exito;
+    req.session.mensaje_exito = null;  // Limpia el mensaje después de mostrarlo
+
+    res.render('mis_pedidos', { pedidos, detallesPorPedido, mensaje });
+
   } catch (error) {
     console.error('Error al obtener pedidos:', error);
     res.status(500).send('Error interno al obtener pedidos');
@@ -221,5 +240,99 @@ router.post('/cancelar-pedido/:id', async (req, res) => {
     res.status(500).send('Error al cancelar el pedido');
   }
 });
+
+
+router.get('/webpay/confirmar', async (req, res) => {
+  const token = req.query.token_ws;
+  if (!token) return res.status(400).send("Token faltante");
+
+  if (!req.session.usuario || !req.session.carro || req.session.carro.length === 0) {
+    return res.status(400).send("No hay usuario o carrito para confirmar");
+  }
+
+  try {
+    // Confirmar transacción con Flask
+    const { data } = await axios.post('http://localhost:5000/webpay/commit', { token_ws: token });
+
+    if (data.status === 'AUTHORIZED') {
+      const userId = req.session.usuario.id_usuario;
+      const carrito = req.session.carro;
+      const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+      const retiroDomicilio = req.session.retiro_domicilio === '1' ? 1 : 0;
+
+      const conn = await db.promise().getConnection();
+      try {
+        await conn.beginTransaction();
+              await conn.beginTransaction();
+              let idDespacho = null;
+                    if (retiroDomicilio === 1) {
+                      const [direccionRows] = await conn.query(
+                        `SELECT id_direccion FROM USUARIO WHERE id_usuario = ?`,
+                        [userId]
+                      );
+
+                      const direccionId = direccionRows[0]?.id_direccion;
+                      if (!direccionId) throw new Error('Dirección no encontrada');
+
+                      const [despachoRes] = await conn.query(
+                        `INSERT INTO DESPACHO (id_direccion) VALUES (?)`,
+                        [direccionId]
+                      );
+                      idDespacho = despachoRes.insertId;
+                    }
+
+                    // Insertar pago
+                    const [pagoResult] = await conn.query(`
+                      INSERT INTO PAGO (confirmado_por_contador, id_estado, id_tp_pago)
+                      VALUES (0, (SELECT id_estado FROM ESTADO WHERE name_estado = 'Pagado'), 1)
+                    `);
+                    const idPago = pagoResult.insertId;
+
+                    // Insertar pedido
+                    const [pedido] = await conn.query(`
+                      INSERT INTO PEDIDO (id_usuario, fecha, monto_total, id_estado, retiro_domicilio, id_pago, id_despacho)
+                      VALUES (?, NOW(), ?, (SELECT id_estado FROM ESTADO WHERE name_estado = 'Pagado'), ?, ?, ?)
+                    `, [userId, total, retiroDomicilio, idPago, idDespacho]);
+
+                    const idPedido = pedido.insertId;
+
+                    // Insertar detalle y actualizar stock
+                    for (const item of carrito) {
+                      await conn.query(`
+                        INSERT INTO DETALLE_PEDIDO (id_pedido, id_producto, cantidad, precio_unitario)
+                        VALUES (?, ?, ?, ?)
+                      `, [idPedido, item.id_producto, item.cantidad, item.precio]);
+
+                      await conn.query(`
+                        UPDATE INVENTARIO SET stock = stock - ? WHERE id_producto = ?
+                      `, [item.cantidad, item.id_producto]);
+                    }
+
+                    await conn.commit();
+
+                    // Limpiar sesión
+                    req.session.carro = [];
+                    req.session.retiro_domicilio = null;
+                    req.session.mensaje_exito = '¡Tu compra se ha realizado con éxito!';
+                    return res.redirect('/mis-pedidos');
+
+                  } catch (err) {
+                    await conn.rollback();
+                    console.error('Error al registrar pedido:', err);
+                    return res.status(500).send('Error al registrar el pedido');
+                  } finally {
+                    conn.release();
+                  }
+
+                } else {
+                  return res.status(400).send('Pago rechazado o no autorizado');
+                }
+
+              } catch (error) {
+                console.error('Error al confirmar Transbank:', error);
+                return res.status(500).send('No se pudo confirmar el pago');
+              }
+            });
+
 
 module.exports = router;

@@ -46,7 +46,12 @@
     <form method="GET" action="/tienda">
         <button type="submit">Seguir comprando</button>
     </form>
-    <form method="POST" action="/carro/confirmar">
+
+    <form method="POST" action="/confirmar">
+        <label for="retiro_domicilio">¿Cómo deseas recibir tu pedido?</label><br>
+        <input type="radio" name="retiro_domicilio" value="1" required> Despacho a domicilio<br>
+        <input type="radio" name="retiro_domicilio" value="0"> Retiro en tienda<br><br>
+
         <button type="submit">Confirmar compra</button>
     </form>
 
