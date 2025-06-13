@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
+
 const { checkRol } = require('../middlewares/auth');
 
 // Vista para admin y vendedor
@@ -25,6 +26,7 @@ router.get('/gestion-pedidos', checkRol([1, 2]), async (req, res) => {
 });
 
 const axios = require('axios');
+
 // Ver productos en tienda
 router.get('/tienda', async (req, res) => {
   try {
@@ -146,6 +148,7 @@ router.post('/confirmar', async (req, res) => {
     return res.redirect('/login');
   }
 
+
   const carrito = req.session.carro;
   const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
   const retiro_domicilio = req.body.retiro_domicilio === '1' ? '1' : '0';
@@ -168,6 +171,7 @@ try {
   } catch (error) {
     console.error('Error al conectar con Transbank:', error);
     res.status(500).send('No se pudo iniciar el pago');
+
   }
 });
 
@@ -195,10 +199,12 @@ router.get('/mis-pedidos', async (req, res) => {
       `, [pedido.id_pedido]);
       detallesPorPedido[pedido.id_pedido] = detalles;
     }
+
     const mensaje = req.session.mensaje_exito;
     req.session.mensaje_exito = null;  // Limpia el mensaje después de mostrarlo
 
     res.render('mis_pedidos', { pedidos, detallesPorPedido, mensaje });
+
   } catch (error) {
     console.error('Error al obtener pedidos:', error);
     res.status(500).send('Error interno al obtener pedidos');
@@ -234,6 +240,7 @@ router.post('/cancelar-pedido/:id', async (req, res) => {
     res.status(500).send('Error al cancelar el pedido');
   }
 });
+
 
 router.get('/webpay/confirmar', async (req, res) => {
   const token = req.query.token_ws;
@@ -326,5 +333,6 @@ router.get('/webpay/confirmar', async (req, res) => {
                 return res.status(500).send('No se pudo confirmar el pago');
               }
             });
+
 
 module.exports = router;

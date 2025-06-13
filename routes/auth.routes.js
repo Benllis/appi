@@ -48,6 +48,7 @@ router.get('/logout', (req, res) => {
   });
 });
 
+
 router.post('/actualizar-estado/:id', checkRol([1, 2]), async (req, res) => {
   const idPedido = req.params.id;
   const nuevoEstado = req.body.nuevo_estado;
@@ -72,6 +73,5 @@ router.post('/actualizar-estado/:id', checkRol([1, 2]), async (req, res) => {
     res.status(500).send('Error al actualizar estado');
   }
 });
-
 
 module.exports = router;

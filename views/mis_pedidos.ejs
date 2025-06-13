@@ -21,9 +21,7 @@
 </head>
 <body>
   <h1>Mis Pedidos</h1>
-  <% if (mensaje) { %>
-    <div class="alert alert-success"><%= mensaje %></div>
-  <% } %>
+
   <a href="/inicio">⬅ Volver al inicio</a>
     <% pedidos.forEach(pedido => { %>
         <div class="pedido">
