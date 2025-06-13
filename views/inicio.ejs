@@ -26,6 +26,7 @@
                     },
                     boxShadow: {
                         'sm': '0 2px 5px rgba(0,0,0,0.05)',
+                        'md': '0 4px 6px rgba(0,0,0,0.1)',
                     }
                 }
             }
@@ -51,16 +52,38 @@
             </button>
         </div>
         
-        <a href="/logout">
-            <button class="bg-primary text-white px-5 py-2.5 rounded-full font-bold">
-                Cerrar sesión
+        <!-- Menú de usuario -->
+        <div class="relative">
+            <button id="user-menu-button" class="flex items-center focus:outline-none">
+                <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </div>
             </button>
-        </a>
+            
+            <!-- Menú desplegable (oculto por defecto) -->
+            <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-md py-1 z-10">
+                <div class="px-4 py-2 border-b border-gray-200">
+                    <p class="text-sm font-semibold"><%= usuario.pnombre %> <%= usuario.appaterno %></p>
+                    <p class="text-xs text-gray-500"><%= usuario.correo %></p>
+                </div>
+                <a href="/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mi perfil</a>
+                <a href="/mis-pedidos" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mis pedidos</a>
+                <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cerrar sesión</a>
+            </div>
+        </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="flex justify-between items-center px-10 py-10 bg-accent rounded-2xl max-w-6xl mx-auto my-8">
-        <div class="max-w-md pl-6">
+    <section class="relative flex justify-between items-center px-10 py-10 rounded-2xl max-w-6xl mx-auto my-8 overflow-hidden ">
+        <!-- Imagen de fondo (NUEVO) -->
+        <img src="" 
+            alt="Fondo ferretería" 
+            class="absolute inset-0 w-full h-full object-cover z-0">
+        
+        <!-- Contenido ORIGINAL (se mantiene igual) -->
+        <div class="max-w-md pl-6 relative z-10">
             <div class="flex flex-col items-center mb-4">
                 <div class="w-8 h-8 border-2 border-black rounded-full flex items-center justify-center font-bold my-1.5 text-sm">1</div>
                 <div class="w-8 h-8 border-2 border-black rounded-full flex items-center justify-center font-bold my-1.5 text-sm">2</div>
@@ -93,5 +116,29 @@
     <footer class="flex justify-center items-center py-5 bg-white border-t border-gray-300 mt-10">
         <!-- Footer content here -->
     </footer>
+
+    <!-- Script para el menú desplegable CORREGIDO -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userMenu = document.getElementById('user-menu');
+            
+            // Mostrar/ocultar menú al hacer clic en el botón
+            userMenuButton.addEventListener('click', function(e) {
+                e.stopPropagation(); // Evita que el evento llegue al document
+                userMenu.classList.toggle('hidden');
+            });
+            
+            // Cerrar el menú al hacer clic fuera de él
+            document.addEventListener('click', function() {
+                userMenu.classList.add('hidden');
+            });
+            
+            // Evitar que el menú se cierre al hacer clic dentro de él
+            userMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
 </body>
 </html>
