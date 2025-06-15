@@ -2,109 +2,87 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tienda de Productos</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    .bienvenida {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #666;
-    }
-    .contenedor-productos {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-    }
-    .tarjeta-producto {
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      padding: 16px;
-      transition: transform 0.2s ease-in-out;
-    }
-    .tarjeta-producto:hover {
-      transform: scale(1.02);
-    }
-    .tarjeta-producto h3 {
-      margin-top: 0;
-      color: #007acc;
-    }
-    .tarjeta-producto p {
-      margin: 5px 0;
-    }
-    .formulario {
-      margin-top: 10px;
-    }
-    .formulario input[type="number"] {
-      width: 60px;
-      padding: 5px;
-    }
-    .formulario button {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .formulario button:hover {
-      background-color: #218838;
-    }
-    .sin-stock {
-      color: red;
-      font-weight: bold;
-    }
-    .ver-detalles {
-      display: inline-block;
-      margin-top: 10px;
-      text-decoration: none;
-      color: #007bff;
-    }
-    .ver-detalles:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-
-  <h1>Tienda de Productos</h1>
-  
-  <% if (usuario) { %>
-    <div class="bienvenida">Bienvenido, <%= usuario.pnombre %>!</div>
-  <% } %>
-
-  <div class="contenedor-productos">
-    <% productos.forEach(producto => { %>
-      <div class="tarjeta-producto">
-        <h3><%= producto.nombre %></h3>
-        <p><strong>Marca:</strong> <%= producto.marca %></p>
-        <p><strong>Descripción:</strong> <%= producto.descripcion %></p>
-        <p><strong>Precio:</strong> $<%= producto.precio.toLocaleString() %></p>
-        <p><strong>Stock:</strong> <%= producto.stock %></p>
-
-        <% if (producto.stock > 0) { %>
-          <form class="formulario" method="POST" action="/carro/agregar">
-            <input type="hidden" name="id_producto" value="<%= producto.id_producto %>">
-            <input type="number" name="cantidad" min="1" max="<%= producto.stock %>" value="1">
-            <button type="submit">Agregar al carro</button>
-          </form>
-        <% } else { %>
-          <p class="sin-stock">Sin stock</p>
-        <% } %>
-
-        <a class="ver-detalles" href="/producto/<%= producto.id_producto %>">Ver detalles</a>
+<body class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">Tienda de Productos</h1>
+      <div class="flex justify-start mb-6">
+        <a href="/inicio" class="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+          <i class="fas fa-arrow-left mr-2"></i>
+          Volver al inicio
+        </a>
       </div>
-    <% }) %>
-  </div>
+    </div>
 
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <% productos.forEach(producto => { %>
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+          <div class="bg-gray-200 h-48 flex items-center justify-center">
+            <i class="fas fa-box-open text-4xl text-gray-400"></i>
+          </div>
+          
+          <div class="p-5">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-gray-800"><%= producto.nombre %></h3>
+              <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                <%= producto.marca %>
+              </span>
+            </div>
+            
+            <p class="text-gray-600 text-sm mb-4 line-clamp-2"><%= producto.descripcion %></p>
+            
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-2xl font-bold text-gray-800">$<%= producto.precio.toLocaleString() %></span>
+              <span class="text-sm <%= producto.stock > 0 ? 'text-green-600' : 'text-red-600' %>">
+                <%= producto.stock > 0 ? `${producto.stock} disponibles` : 'Agotado' %>
+              </span>
+            </div>
+            
+            <div class="space-y-3">
+              <% if (producto.stock > 0) { %>
+                <form method="POST" action="/carro/agregar" class="flex items-center gap-2">
+                  <input type="hidden" name="id_producto" value="<%= producto.id_producto %>">
+                  <input 
+                    type="number" 
+                    name="cantidad" 
+                    min="1" 
+                    max="<%= producto.stock %>" 
+                    value="1"
+                    class="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                  <button 
+                    type="submit" 
+                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition-colors flex items-center justify-center"
+                  >
+                    <i class="fas fa-cart-plus mr-2"></i>
+                    Añadir
+                  </button>
+                </form>
+              <% } else { %>
+                <div class="bg-red-50 text-red-700 px-4 py-2 rounded-md text-center">
+                  <i class="fas fa-exclamation-circle mr-2"></i>
+                  Sin stock
+                </div>
+              <% } %>
+              
+              <a 
+                href="/producto/<%= producto.id_producto %>" 
+                class="block text-center text-indigo-600 hover:text-indigo-800 font-medium text-sm transition-colors"
+              >
+                <i class="fas fa-info-circle mr-2"></i>
+                Ver detalles
+              </a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
 </body>
 </html>

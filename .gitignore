@@ -3,9 +3,54 @@ node_modules/
 dist/
 build/
 .env
+package-lock.json
+.vscode/
+.idea/
 
+# Ignorar archivos de configuración de IDE
+.vscode/
+.idea/
+# Ignorar archivos de dependencias
+bower_components/
+# Ignorar archivos de configuración de entorno
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+# Ignorar archivos de caché
+.cache/
+# Ignorar archivos de compilación
+coverage/
+# Ignorar archivos de documentación
+docs/
+# Ignorar archivos de pruebas
+test/
+tests/
+# Ignorar archivos de configuración de pruebas
+karma.conf.js
+jest.config.js
+# Ignorar archivos de configuración de linters
+.eslintrc.js
+# Ignorar archivos de configuración de formateadores
+.prettierrc
+# Ignorar archivos de configuración de TypeScript
+tsconfig.json
+# Ignorar archivos de configuración de Babel
+.babelrc
+# Ignorar archivos de configuración de Webpack
+webpack.config.js
+# Ignorar archivos de configuración de Parcel
+.parcelrc
+# Ignorar archivos de configuración de Rollup
+.rollup.config.js
+# Ignorar archivos de configuración de Gulp
+.gulpfile.js
+# Ignorar archivos de configuración de Grunt
+.gruntfile.js
+# Ignorar archivos de configuración de PostCSS
 # Ignorar archivos de logs
 *.log
 
 # Ignorar archivos de sistema
 .DS_Store
+.env

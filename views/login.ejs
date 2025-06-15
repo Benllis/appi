@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login con Validación y Popup</title>
+  <title>Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Íconos (opcional) -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
@@ -13,7 +12,6 @@
     <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Iniciar Sesión</h2>
     
     <form id="loginForm" action="/login" method="POST" class="space-y-4">
-      <!-- Campo Correo -->
       <div>
         <label for="correo" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
         <div class="relative">
@@ -32,7 +30,7 @@
         <p id="emailErrorText" class="hidden text-sm text-red-600 mt-1">El correo debe contener "@" y un dominio válido.</p>
       </div>
 
-      <!-- Campo Contraseña -->
+
       <div>
         <label for="contrasena" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
         <div class="relative">
@@ -62,7 +60,6 @@
     </form>
   </div>
 
-  <!-- Popup para errores del backend (ej: "Credenciales incorrectas") -->
   <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full mx-4">
       <div class="flex justify-between items-start mb-4">
@@ -75,7 +72,6 @@
     </div>
   </div>
 
-  <!-- Script para validación + popup -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const correoInput = document.getElementById('correo');
@@ -89,7 +85,6 @@
       const closePopup = document.getElementById('closePopup');
       const popupMessage = document.getElementById('popupMessage');
 
-      // 1. Validación en tiempo real (frontend)
       correoInput.addEventListener('input', validateEmail);
       contrasenaInput.addEventListener('input', validatePassword);
 
@@ -127,14 +122,12 @@
         submitBtn.disabled = !(isEmailValid && isPasswordValid);
       }
 
-      // 2. Mostrar popup si hay un mensaje de error del backend
-      const backendErrorMessage = "<%= mensaje %>"; // Esto lo inyecta tu servidor
+      const backendErrorMessage = "<%= mensaje %>"; 
       if (backendErrorMessage && backendErrorMessage.trim() !== "") {
         popupMessage.textContent = backendErrorMessage;
         popup.classList.remove('hidden');
       }
 
-      // Cerrar popup
       closePopup.addEventListener('click', () => {
         popup.classList.add('hidden');
       });
