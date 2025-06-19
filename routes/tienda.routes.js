@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
-
 const { checkRol } = require('../middlewares/auth');
 
 // Vista para admin y vendedor
@@ -42,9 +41,19 @@ router.get('/tienda', async (req, res) => {
         i.stock
       FROM PRODUCTO p
       JOIN MARCA m ON p.id_marca = m.id_marca
-      JOIN HISTORIAL_PRECIO hp ON hp.id_producto = p.id_producto
+      JOIN (
+        SELECT hp1.id_producto, hp1.valor
+        FROM HISTORIAL_PRECIO hp1
+        INNER JOIN (
+          SELECT id_producto, MAX(fecha) AS fecha_max
+          FROM HISTORIAL_PRECIO
+          GROUP BY id_producto
+        ) hp2 ON hp1.id_producto = hp2.id_producto AND hp1.fecha = hp2.fecha_max
+      ) hp ON hp.id_producto = p.id_producto
       JOIN INVENTARIO i ON i.id_producto = p.id_producto
+      WHERE i.stock >= 0
     `);
+
     res.render('tienda', { productos, usuario: req.session.usuario });
   } catch (error) {
     console.error('Error al cargar la tienda:', error);
@@ -333,6 +342,78 @@ router.get('/webpay/confirmar', async (req, res) => {
                 return res.status(500).send('No se pudo confirmar el pago');
               }
             });
+
+
+router.post('/producto/eliminar/:id', (req, res) => {
+  const { id } = req.params;
+  const usuario = req.session.usuario;
+  if (!usuario || usuario.id_rol !== 1) return res.status(403).send("No autorizado");
+
+  db.query('UPDATE INVENTARIO SET stock = -1 WHERE id_producto = ?', [id], (err, result) => {
+    if (err) {
+      console.error('Error al eliminar producto:', err);
+      return res.status(500).send('Error al eliminar producto');
+    }
+    res.redirect('/tienda');
+  });
+});
+
+// Editar producto
+router.get('/producto/editar/:id', (req, res) => {
+  const id = req.params.id;
+  const usuario = req.session.usuario;
+  if (!usuario || usuario.id_rol !== 1) return res.status(403).send('No autorizado');
+
+  db.query('SELECT * FROM PRODUCTO WHERE id_producto = ?', [id], (err, rows) => {
+    if (err) return res.status(500).send('Error al obtener producto');
+    if (rows.length === 0) return res.status(404).send('Producto no encontrado');
+    res.render('editarProducto', { producto: rows[0] });
+  });
+});
+
+router.post('/producto/editar/:id', (req, res) => {
+  const { id } = req.params;
+  const { nombre, descripcion, categoria, subcategoria, id_marca, precio, stock } = req.body;
+  const usuario = req.session.usuario;
+
+  if (!usuario || usuario.id_rol !== 1) return res.status(403).send("No autorizado");
+
+  // 1. Actualizar tabla PRODUCTO
+  db.query(`
+    UPDATE PRODUCTO 
+    SET nombre = ?, descripcion = ?, categoria = ?, subcategoria = ?, id_marca = ?
+    WHERE id_producto = ?
+  `, [nombre, descripcion, categoria, subcategoria, id_marca, id], (err1) => {
+    if (err1) {
+      console.error('Error al actualizar PRODUCTO:', err1);
+      return res.status(500).send("Error al actualizar producto (producto)");
+    }
+
+    // 2. Insertar nuevo precio en HISTORIAL_PRECIO
+    db.query(`
+      INSERT INTO HISTORIAL_PRECIO (id_producto, valor, fecha) 
+      VALUES (?, ?, NOW())
+    `, [id, precio], (err2) => {
+      if (err2) {
+        console.error('Error al insertar en HISTORIAL_PRECIO:', err2);
+        return res.status(500).send("Error al actualizar producto (precio)");
+      }
+
+      // 3. Actualizar stock en INVENTARIO
+      db.query(`
+        UPDATE INVENTARIO SET stock = ? WHERE id_producto = ?
+      `, [stock, id], (err3) => {
+        if (err3) {
+          console.error('Error al actualizar INVENTARIO:', err3);
+          return res.status(500).send("Error al actualizar producto (stock)");
+        }
+
+        // Todo OK
+        res.redirect('/tienda');
+      });
+    });
+  });
+});
 
 
 module.exports = router;

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Producto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <div class="container mx-auto p-8 max-w-2xl">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Editar Producto</h1>
+
+    <form action="/producto/editar/<%= producto.id_producto %>" method="POST" class="bg-white shadow-md rounded-lg p-6 space-y-5">
+      
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Nombre</label>
+        <input type="text" name="nombre" value="<%= producto.nombre %>" required class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Descripción</label>
+        <textarea name="descripcion" required rows="4" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"><%= producto.descripcion %></textarea>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">Categoría</label>
+          <input type="text" name="categoria" value="<%= producto.categoria %>" class="w-full border rounded-md px-3 py-2">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">Subcategoría</label>
+          <input type="text" name="subcategoria" value="<%= producto.subcategoria %>" class="w-full border rounded-md px-3 py-2">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Marca (ID)</label>
+        <input type="number" name="id_marca" value="<%= producto.id_marca %>" required class="w-full border rounded-md px-3 py-2">
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">Nuevo Precio</label>
+          <input type="number" name="precio" required step="100" class="w-full border rounded-md px-3 py-2">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">Stock</label>
+          <input type="number" name="stock" required min="0" class="w-full border rounded-md px-3 py-2">
+        </div>
+      </div>
+
+      <div class="flex justify-between mt-6">
+        <a href="/tienda" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-md">
+          <i class="fas fa-arrow-left mr-2"></i> Cancelar
+        </a>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md">
+          <i class="fas fa-save mr-2"></i> Guardar Cambios
+        </button>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

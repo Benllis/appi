@@ -82,6 +82,11 @@
                     </div>
                     <a href="/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mi perfil</a>
                     <a href="/mis-pedidos" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mis pedidos</a>
+                    <% if (usuario.id_rol === 1 || usuario.id_rol === 2) { %>
+                        <a href="/gestion-pedidos" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            Ir a Gestión de Pedidos
+                        </a>
+                    <% } %>
                     <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cerrar sesión</a>
                 </div>
             </div>
