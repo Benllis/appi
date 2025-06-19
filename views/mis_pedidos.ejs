@@ -1,55 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Pedidos</title>
-  <style>
-    .detalles {
-      display: none;
-      margin-left: 20px;
-    }
-    .pedido {
-      margin-bottom: 10px;
-      border-bottom: 1px solid #ccc;
-      padding: 10px;
-    }
-    .toggle {
-      cursor: pointer;
-      color: blue;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-  <h1>Mis Pedidos</h1>
+<body class="bg-gray-50 min-h-screen">
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">Mis Pedidos</h1>
+      <a href="/inicio" class="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+        <i class="fas fa-arrow-left mr-2"></i>
+        <span>Volver al inicio</span>
+      </a>
+    </div>
 
-  <a href="/inicio">⬅ Volver al inicio</a>
-    <% pedidos.forEach(pedido => { %>
-        <div class="pedido">
-            <div class="toggle" onclick="toggleDetalles(<%= pedido.id_pedido %>)">
-            🔽 Pedido - <%= pedido.fecha.toISOString().slice(0, 10) %> - Estado: <%= pedido.name_estado %> - Total: $<%= pedido.monto_total %>
+    <div class="space-y-4">
+      <% pedidos.forEach(pedido => { %>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
+          <div 
+            class="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+            onclick="toggleDetalles(<%= pedido.id_pedido %>)"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-shopping-bag text-indigo-500 mr-3"></i>
+              <div>
+                <h3 class="font-semibold text-gray-800">Pedido #<%= pedido.id_pedido %></h3>
+                <p class="text-sm text-gray-500"><%= pedido.fecha.toISOString().slice(0, 10) %></p>
+              </div>
             </div>
+            
+            <div class="flex items-center space-x-4">
+              <span class="px-3 py-1 rounded-full text-sm font-medium 
+                <% if (pedido.name_estado === 'Pendiente') { %> 
+                  bg-yellow-100 text-yellow-800
+                <% } else if (pedido.name_estado === 'Completado') { %>
+                  bg-green-100 text-green-800
+                <% } else if (pedido.name_estado === 'Cancelado') { %>
+                  bg-red-100 text-red-800
+                <% } else { %>
+                  bg-blue-100 text-blue-800
+                <% } %>">
+                <%= pedido.name_estado %>
+              </span>
+              
+              <span class="font-bold text-gray-800">$<%= pedido.monto_total %></span>
+              
+              <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-<%= pedido.id_pedido %>"></i>
+            </div>
+          </div>
 
-            <% if (pedido.name_estado === 'Pendiente') { %>
-            <form action="/cancelar-pedido/<%= pedido.id_pedido %>" method="POST" onsubmit="return confirm('¿Seguro que deseas cancelar este pedido?');">
-                <button type="submit">❌ Cancelar Pedido</button>
-            </form>
-            <% } %>
-
-            <div id="detalles-<%= pedido.id_pedido %>" class="detalles">
-            <ul>
+          <div id="detalles-<%= pedido.id_pedido %>" class="hidden border-t border-gray-200">
+            <div class="p-4">
+              <h4 class="font-medium text-gray-700 mb-3">Productos:</h4>
+              <ul class="divide-y divide-gray-200">
                 <% detallesPorPedido[pedido.id_pedido].forEach(detalle => { %>
-                <li><%= detalle.nombre %> - Cantidad: <%= detalle.cantidad %> - Precio: $<%= detalle.precio_unitario %></li>
+                  <li class="py-3 flex justify-between">
+                    <div>
+                      <p class="font-medium text-gray-800"><%= detalle.nombre %></p>
+                      <p class="text-sm text-gray-500">Cantidad: <%= detalle.cantidad %></p>
+                    </div>
+                    <p class="font-medium">$<%= (detalle.precio_unitario * detalle.cantidad).toLocaleString('es-CL') %></p>
+                  </li>
                 <% }) %>
-            </ul>
+              </ul>
+              
+              <div class="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
+                <p class="font-bold text-gray-800">Total:</p>
+                <p class="font-bold text-lg">$<%= pedido.monto_total %></p>
+              </div>
+              
+              <% if (pedido.name_estado === 'Pendiente') { %>
+              <div class="mt-4 flex justify-end">
+                <form 
+                  action="/cancelar-pedido/<%= pedido.id_pedido %>" 
+                  method="POST" 
+                  onsubmit="return confirm('¿Seguro que deseas cancelar este pedido?');"
+                >
+                  <button 
+                    type="submit" 
+                    class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors flex items-center"
+                  >
+                    <i class="fas fa-times mr-2"></i>
+                    Cancelar Pedido
+                  </button>
+                </form>
+              </div>
+              <% } %>
             </div>
+          </div>
         </div>
-    <% }) %>
-
+      <% }) %>
+    </div>
+  </div>
 
   <script>
     function toggleDetalles(id) {
-      const el = document.getElementById('detalles-' + id);
-      el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+      const detailsEl = document.getElementById(`detalles-${id}`);
+      const iconEl = document.getElementById(`icon-${id}`);
+      
+      detailsEl.classList.toggle('hidden');
+      iconEl.classList.toggle('transform');
+      iconEl.classList.toggle('rotate-180');
     }
   </script>
 </body>

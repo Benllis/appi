@@ -2,20 +2,95 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Perfil de Usuario</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-  <h1>Bienvenido, <%= usuario.pnombre %> <%= usuario.appaterno %></h1>
-    <a href="/inicio">⬅ Volver al inicio</a>
-    <% if (direccion) { %>
-        <h2>Tu dirección:</h2>
-        <p><strong>Nº:</strong> <%= direccion.direccion %></p>
-        <p><strong>Comuna:</strong> <%= direccion.comuna %></p>
-        <p><strong>Región:</strong> <%= direccion.region %></p>
-    <% } else { %>
-        <p>No se encontró la dirección.</p>
-    <% } %>
+<body class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="flex justify-between items-center mb-8">
+      <a href="/inicio" class="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+        <i class="fas fa-arrow-left mr-2"></i>
+        <span>Volver al inicio</span>
+      </a>
+      <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+        <i class="fas fa-sign-out-alt mr-2"></i>
+        Cerrar sesión
+      </a>
+    </div>
 
-    <a href="/logout">Cerrar sesión</a>
+    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+      <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-white">
+        <h1 class="text-3xl font-bold">
+          Bienvenido, <%= usuario.pnombre %> <%= usuario.appaterno %>
+        </h1>
+        <p class="opacity-90">Aquí puedes ver y gestionar tu información personal</p>
+      </div>
+
+      <div class="p-6">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Tu dirección</h2>
+        
+        <% if (direccion) { %>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Número y Calle</h3>
+              <p class="text-lg font-semibold text-gray-800"><%= direccion.direccion %></p>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Comuna</h3>
+              <p class="text-lg font-semibold text-gray-800"><%= direccion.comuna %></p>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Región</h3>
+              <p class="text-lg font-semibold text-gray-800"><%= direccion.region %></p>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <i class="fas fa-exclamation-circle text-yellow-500"></i>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-yellow-700">
+                  No se encontró la dirección. 
+                  <a href="#" class="font-medium underline text-yellow-700 hover:text-yellow-600">
+                    ¿Deseas agregar una?
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      </div>
+
+      <div class="px-6 pb-6">
+        <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+          <i class="fas fa-edit mr-2"></i>
+          Editar información
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Información de contacto</h3>
+        <p class="text-gray-600 mb-2"><i class="fas fa-envelope mr-2 text-blue-500"></i> <%= usuario.correo %> </p>
+        <p class="text-gray-600"><i class="fas fa-phone mr-2 text-blue-500"></i> No lo agregamos (xd)</p>
+      </div>
+      
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Opciones de cuenta (No funcional)</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-blue-600 hover:underline flex items-center"><i class="fas fa-key mr-2"></i> Cambiar contraseña</a></li>
+          <li><a href="#" class="text-blue-600 hover:underline flex items-center"><i class="fas fa-bell mr-2"></i> Preferencias de notificación</a></li>
+          <li><a href="#" class="text-blue-600 hover:underline flex items-center"><i class="fas fa-shield-alt mr-2"></i> Privacidad y seguridad</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
