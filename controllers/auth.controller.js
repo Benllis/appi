@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const bcrypt = require('bcrypt');
 
 // Mostrar el formulario de login
 const mostrarLogin = (req, res) => {
@@ -10,22 +11,40 @@ const procesarLogin = async (req, res) => {
   const { correo, contrasena } = req.body;
 
   try {
+    // Buscar solo por correo
     const [rows] = await db.promise().query(
-      'SELECT * FROM USUARIO WHERE correo = ? AND contrasena = ?',
-      [correo, contrasena]
+      'SELECT * FROM USUARIO WHERE correo = ?',
+      [correo]
     );
 
-    if (rows.length > 0) {
-        req.session.usuario = rows[0];
-        res.redirect('/inicio');
-    } else {
-        res.render('login', { mensaje: 'Correo o contraseña incorrectos' });
+    // Si no se encuentra el correo
+    if (rows.length === 0) {
+      return res.render('login', { mensaje: 'Correo o contraseña incorrectos' });
     }
+
+    const usuario = rows[0];
+
+    let esValida = false;
+
+    if (usuario.contrasena.startsWith('$2b$')) {
+      // Contraseña encriptada → usar bcrypt.compare
+      esValida = await bcrypt.compare(contrasena, usuario.contrasena);
+    } else {
+      // Contraseña sin encriptar → comparar directo
+      esValida = contrasena === usuario.contrasena;
+    }
+
+    if (esValida) {
+      req.session.usuario = usuario;
+      return res.redirect('/inicio');
+    } else {
+      return res.render('login', { mensaje: 'Correo o contraseña incorrectos' });
+    }
+
   } catch (error) {
-        console.error('Error al procesar login:', error);
-        res.render('login', { mensaje: 'Error interno del servidor' });
+    console.error('Error al procesar login:', error);
+    res.render('login', { mensaje: 'Error interno del servidor' });
   }
 };
 
 module.exports = { mostrarLogin, procesarLogin };
-

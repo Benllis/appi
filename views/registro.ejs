@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crear Cuenta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-lg">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Crear Cuenta</h2>
+
+    <% if (typeof mensaje !== 'undefined' && mensaje) { %>
+      <p class="bg-red-100 text-red-700 p-2 rounded mb-4"><%= mensaje %></p>
+    <% } %>
+
+    <form action="/registro" method="POST" class="space-y-4">
+
+      <!-- Datos personales -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="pnombre" class="block text-sm font-medium text-gray-700">Primer Nombre *</label>
+          <input type="text" name="pnombre" id="pnombre" required
+            class="w-full px-3 py-2 border rounded-md" />
+        </div>
+        <div>
+          <label for="snombre" class="block text-sm font-medium text-gray-700">Segundo Nombre</label>
+          <input type="text" name="snombre" id="snombre"
+            class="w-full px-3 py-2 border rounded-md" />
+        </div>
+        <div>
+          <label for="appaterno" class="block text-sm font-medium text-gray-700">Apellido Paterno *</label>
+          <input type="text" name="appaterno" id="appaterno" required
+            class="w-full px-3 py-2 border rounded-md" />
+        </div>
+        <div>
+          <label for="apmaterno" class="block text-sm font-medium text-gray-700">Apellido Materno *</label>
+          <input type="text" name="apmaterno" id="apmaterno" required
+            class="w-full px-3 py-2 border rounded-md" />
+        </div>
+      </div>
+
+      <div>
+        <label for="correo" class="block text-sm font-medium text-gray-700">Correo Electrónico *</label>
+        <input type="email" name="correo" id="correo" required
+          class="w-full px-3 py-2 border rounded-md" />
+      </div>
+
+      <div>
+        <label for="contrasena" class="block text-sm font-medium text-gray-700">Contraseña *</label>
+        <input type="password" name="contrasena" id="contrasena" minlength="6" required
+          class="w-full px-3 py-2 border rounded-md" />
+      </div>
+
+      <div>
+        <label for="rut" class="block text-sm font-medium text-gray-700">RUT *</label>
+        <input type="text" name="rut" id="rut" required
+          class="w-full px-3 py-2 border rounded-md" />
+      </div>
+
+      <div>
+        <label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento *</label>
+        <input type="date" name="fecha_nac" id="fecha_nac" required
+          class="w-full px-3 py-2 border rounded-md" />
+      </div>
+
+      <!-- Dirección -->
+      <h3 class="text-lg font-semibold mt-6 mb-2">Dirección</h3>
+
+      <div>
+        <label for="region_id" class="block text-sm font-medium text-gray-700">Región *</label>
+        <select name="region_id" id="region_id" required class="w-full px-3 py-2 border rounded-md">
+          <option value="">Seleccione región</option>
+          <% regiones.forEach(region => { %>
+            <option value="<%= region.id_region %>"><%= region.name_region %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label for="comuna_id" class="block text-sm font-medium text-gray-700">Comuna *</label>
+        <select name="comuna_id" id="comuna_id" required class="w-full px-3 py-2 border rounded-md">
+          <option value="">Seleccione comuna</option>
+          <% comunas.forEach(comuna => { %>
+            <option value="<%= comuna.id_comuna %>"><%= comuna.name_comuna %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección *</label>
+        <input type="text" name="direccion" id="direccion" required
+          class="w-full px-3 py-2 border rounded-md" placeholder="Calle, número, etc." />
+      </div>
+
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors">Crear Cuenta</button>
+    </form>
+
+    <p class="mt-4 text-center text-gray-600">
+      ¿Ya tienes cuenta? <a href="/login" class="text-blue-600 hover:underline">Inicia sesión aquí</a>.
+    </p>
+  </div>
+
+  <script>
+    // Aquí podrías agregar lógica para cargar las comunas dinámicamente
+    // cuando se selecciona la región (si quieres)
+  </script>
+</body>
+</html>

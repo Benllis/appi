@@ -1,48 +1,49 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md mb-6">
     <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Iniciar Sesión</h2>
-    
+
     <form id="loginForm" action="/login" method="POST" class="space-y-4">
       <div>
         <label for="correo" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
         <div class="relative">
-          <input 
-            type="email" 
-            name="correo" 
-            id="correo" 
+          <input
+            type="email"
+            name="correo"
+            id="correo"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 peer"
             placeholder="ejemplo@correo.com"
-          >
+          />
           <span id="emailError" class="hidden absolute right-3 top-2 text-red-500">
             <i class="fas fa-exclamation-circle"></i>
           </span>
         </div>
-        <p id="emailErrorText" class="hidden text-sm text-red-600 mt-1">El correo debe contener "@" y un dominio válido.</p>
+        <p id="emailErrorText" class="hidden text-sm text-red-600 mt-1">
+          El correo debe contener "@" y un dominio válido.
+        </p>
       </div>
-
 
       <div>
         <label for="contrasena" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
         <div class="relative">
-          <input 
-            type="password" 
-            name="contrasena" 
-            id="contrasena" 
+          <input
+            type="password"
+            name="contrasena"
+            id="contrasena"
             required
             minlength="6"
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 peer"
             placeholder="••••••••"
-          >
+          />
           <span id="passwordError" class="hidden absolute right-3 top-2 text-red-500">
             <i class="fas fa-exclamation-circle"></i>
           </span>
@@ -50,8 +51,8 @@
         <p id="passwordErrorText" class="hidden text-sm text-red-600 mt-1">Mínimo 6 caracteres.</p>
       </div>
 
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
         id="submitBtn"
       >
@@ -60,7 +61,18 @@
     </form>
   </div>
 
-  <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <!-- Botón para ir a registro -->
+  <div class="w-full max-w-md text-center">
+    <p class="text-gray-700">
+      ¿No tienes cuenta?
+      <a href="/registro" class="text-blue-600 hover:underline font-semibold">Crear cuenta</a>
+    </p>
+  </div>
+
+  <div
+    id="popup"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden"
+  >
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full mx-4">
       <div class="flex justify-between items-start mb-4">
         <h3 class="text-xl font-bold text-red-600" id="popupTitle">Error</h3>
@@ -73,31 +85,31 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const correoInput = document.getElementById('correo');
-      const contrasenaInput = document.getElementById('contrasena');
-      const emailError = document.getElementById('emailError');
-      const emailErrorText = document.getElementById('emailErrorText');
-      const passwordError = document.getElementById('passwordError');
-      const passwordErrorText = document.getElementById('passwordErrorText');
-      const submitBtn = document.getElementById('submitBtn');
-      const popup = document.getElementById('popup');
-      const closePopup = document.getElementById('closePopup');
-      const popupMessage = document.getElementById('popupMessage');
+    document.addEventListener("DOMContentLoaded", () => {
+      const correoInput = document.getElementById("correo");
+      const contrasenaInput = document.getElementById("contrasena");
+      const emailError = document.getElementById("emailError");
+      const emailErrorText = document.getElementById("emailErrorText");
+      const passwordError = document.getElementById("passwordError");
+      const passwordErrorText = document.getElementById("passwordErrorText");
+      const submitBtn = document.getElementById("submitBtn");
+      const popup = document.getElementById("popup");
+      const closePopup = document.getElementById("closePopup");
+      const popupMessage = document.getElementById("popupMessage");
 
-      correoInput.addEventListener('input', validateEmail);
-      contrasenaInput.addEventListener('input', validatePassword);
+      correoInput.addEventListener("input", validateEmail);
+      contrasenaInput.addEventListener("input", validatePassword);
 
       function validateEmail() {
-        const isValid = correoInput.value.includes('@') && correoInput.value.includes('.');
+        const isValid = correoInput.value.includes("@") && correoInput.value.includes(".");
         if (!isValid && correoInput.value.length > 0) {
-          correoInput.classList.add('border-red-500', 'focus:ring-red-500');
-          emailError.classList.remove('hidden');
-          emailErrorText.classList.remove('hidden');
+          correoInput.classList.add("border-red-500", "focus:ring-red-500");
+          emailError.classList.remove("hidden");
+          emailErrorText.classList.remove("hidden");
         } else {
-          correoInput.classList.remove('border-red-500', 'focus:ring-red-500');
-          emailError.classList.add('hidden');
-          emailErrorText.classList.add('hidden');
+          correoInput.classList.remove("border-red-500", "focus:ring-red-500");
+          emailError.classList.add("hidden");
+          emailErrorText.classList.add("hidden");
         }
         updateSubmitButton();
       }
@@ -105,40 +117,39 @@
       function validatePassword() {
         const isValid = contrasenaInput.value.length >= 6;
         if (!isValid && contrasenaInput.value.length > 0) {
-          contrasenaInput.classList.add('border-red-500', 'focus:ring-red-500');
-          passwordError.classList.remove('hidden');
-          passwordErrorText.classList.remove('hidden');
+          contrasenaInput.classList.add("border-red-500", "focus:ring-red-500");
+          passwordError.classList.remove("hidden");
+          passwordErrorText.classList.remove("hidden");
         } else {
-          contrasenaInput.classList.remove('border-red-500', 'focus:ring-red-500');
-          passwordError.classList.add('hidden');
-          passwordErrorText.classList.add('hidden');
+          contrasenaInput.classList.remove("border-red-500", "focus:ring-red-500");
+          passwordError.classList.add("hidden");
+          passwordErrorText.classList.add("hidden");
         }
         updateSubmitButton();
       }
 
       function updateSubmitButton() {
-        const isEmailValid = correoInput.value.includes('@') && correoInput.value.includes('.');
+        const isEmailValid = correoInput.value.includes("@") && correoInput.value.includes(".");
         const isPasswordValid = contrasenaInput.value.length >= 6;
         submitBtn.disabled = !(isEmailValid && isPasswordValid);
       }
 
-      const backendErrorMessage = "<%= mensaje %>"; 
+      const backendErrorMessage = "<%= mensaje %>";
       if (backendErrorMessage && backendErrorMessage.trim() !== "") {
         popupMessage.textContent = backendErrorMessage;
-        popup.classList.remove('hidden');
+        popup.classList.remove("hidden");
       }
 
-      closePopup.addEventListener('click', () => {
-        popup.classList.add('hidden');
+      closePopup.addEventListener("click", () => {
+        popup.classList.add("hidden");
       });
 
-      popup.addEventListener('click', (e) => {
+      popup.addEventListener("click", (e) => {
         if (e.target === popup) {
-          popup.classList.add('hidden');
+          popup.classList.add("hidden");
         }
       });
     });
   </script>
 </body>
 </html>
-
