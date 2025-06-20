@@ -5,6 +5,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const tiendaRoutes = require('./routes/tienda.routes');
+const carroRoutes = require('./routes/carro.routes');
 
 app.use(session({
   secret: 'datos_user',
@@ -25,6 +26,7 @@ app.use(express.static(path.join(__dirname, 'src')));
 app.use('/', require('./routes/auth.routes'));
 app.use('/usuarios', require('./routes/usuarios.routes'));
 app.use('/', tiendaRoutes);
+app.use('/', carroRoutes);
 // Ruta raíz
 app.get('/', (req, res) => {
   res.send('¡API funcionando correctamente!');

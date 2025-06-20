@@ -56,7 +56,10 @@
                     <div class="text-sm text-gray-900"><%= item.cantidad %></div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-semibold text-gray-900">$<%= (item.precio * item.cantidad).toLocaleString() %></div>
+                    <div class="text-sm text-gray-900">$<%= item.precio.toFixed(0) %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-semibold text-gray-900">$<%= (item.precio * item.cantidad).toFixed(0) %></div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <form method="POST" action="/carro/quitar/<%= item.id_producto %>" class="inline">
@@ -74,8 +77,9 @@
 
       <div class="bg-white rounded-xl shadow-md p-6 mb-6">
         <div class="flex justify-between items-center mb-6">
-          <h3 class="text-xl font-bold text-gray-800">Total: <span class="text-indigo-600">$<%= total.toLocaleString() %></span></h3>
-          
+          <h3 class="text-xl font-bold text-gray-800">
+            Total: <span class="text-indigo-600">$<%= total.toFixed(0) %></span>
+          </h3>
           <div class="space-x-3">
             <a href="/tienda" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
               <i class="fas fa-arrow-left mr-2"></i> Seguir comprando
