@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lista de Usuarios</title>
+</head>
+<body>
+  <h1>Usuarios</h1>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Correo</th>
+        <th>Rol Actual</th>
+        <th>Cambiar Rol</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% usuarios.forEach(usuario => { %>
+        <tr>
+          <td><%= usuario.pnombre %></td>
+          <td><%= usuario.appaterno %></td>
+          <td><%= usuario.correo %></td>
+          <td><%= usuario.name_rol %></td>
+          <td>
+            <form method="POST" action="/usuarios/admin/usuarios/<%= usuario.id_usuario %>/cambiar-rol">
+            <select name="nuevo_rol_id">
+              <% roles.forEach(rol => { %>
+                <option value="<%= rol.id_rol %>" <%= rol.id_rol === usuario.id_rol ? 'selected' : '' %>><%= rol.name_rol %></option>
+              <% }) %>
+            </select>
+          </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</body>
+</html>

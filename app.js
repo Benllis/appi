@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'src')));
 
 
 app.use('/', require('./routes/auth.routes'));
-app.use('/usuarios', require('./routes/usuarios.routes'));
+app.use('/', require('./routes/usuarios.routes'));
 app.use('/', tiendaRoutes);
 app.use('/', carroRoutes);
 // Ruta raíz
