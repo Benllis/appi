@@ -190,4 +190,37 @@ router.post('/producto/nuevo', checkRol([1]), async (req, res) => {
   }
 });
 
+router.get('/buscar', async (req, res) => {
+  const termino = req.query.q ? req.query.q.trim() : '';
+
+  if (!termino) {
+    return res.redirect('/'); // o a /tienda, donde tengas el listado general
+  }
+
+  try {
+    const [productos] = await db.promise().query(`
+      SELECT p.*, m.nombre AS marca, hp.valor AS precio, i.stock
+      FROM PRODUCTO p
+      LEFT JOIN MARCA m ON p.id_marca = m.id_marca
+      LEFT JOIN INVENTARIO i ON p.id_producto = i.id_producto
+      LEFT JOIN (
+        SELECT id_producto, valor
+        FROM HISTORIAL_PRECIO
+        WHERE (id_producto, fecha) IN (
+          SELECT id_producto, MAX(fecha) 
+          FROM HISTORIAL_PRECIO 
+          GROUP BY id_producto
+        )
+      ) hp ON p.id_producto = hp.id_producto
+      WHERE p.nombre LIKE ? AND i.stock > 0
+      ORDER BY p.nombre
+    `, [`%${termino}%`]);
+
+    res.render('buscar-resultados', { usuario: req.session.usuario, productos, termino });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error en la búsqueda');
+  }
+});
+
 module.exports = router;

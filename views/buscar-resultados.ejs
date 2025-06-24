@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resultados de búsqueda</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-secondary font-sans text-gray-800">
+  <header class="p-5 bg-white shadow">
+    <h1 class="text-3xl font-bold">Resultados para: "<%= termino %>"</h1>
+    <a href="/inicio" class="text-indigo-600 hover:underline mt-2 inline-block">Volver al inicio</a>
+  </header>
+
+  <main class="max-w-6xl mx-auto my-8 px-6">
+    <% if (productos.length === 0) { %>
+      <p class="text-gray-600">No se encontraron productos que coincidan con tu búsqueda.</p>
+    <% } else { %>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <% productos.forEach(producto => { %>
+          <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            <div class="bg-gray-200 h-48 flex items-center justify-center">
+              <i class="fas fa-box text-4xl text-gray-400"></i>
+            </div>
+            <div class="p-5">
+              <h3 class="text-xl font-bold text-gray-800 mb-2"><%= producto.nombre %></h3>
+              <div class="flex items-center mb-4">
+                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded mr-3">
+                  <%= producto.marca %>
+                </span>
+                <span class="text-sm text-gray-500">
+                  Categoría / Subcategoría
+                </span>
+              </div>
+              <div class="flex justify-between items-center mb-4">
+                <span class="text-2xl font-bold text-gray-800">$<%= producto.precio %></span>
+                <span class="text-sm text-green-600"><%= producto.stock %> disponibles</span>
+              </div>
+              <a href="/producto/<%= producto.id_producto %>" class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md font-medium text-center transition-colors">
+                Ver producto
+              </a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </main>
+
+  <footer class="flex justify-center items-center py-5 bg-white border-t border-gray-300 mt-10">
+    <p class="text-sm text-gray-600">© 2025 Ferretería Online</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+</html>
