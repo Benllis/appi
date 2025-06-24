@@ -50,6 +50,8 @@ router.post('/carro/agregar', async (req, res) => {
 
 // Ver carrito (con último precio actualizado)
 router.get('/carro/ver', async (req, res) => {
+  const mensaje_error = req.session.mensaje_error;
+  req.session.mensaje_error = null;
   if (!req.session.carro || req.session.carro.length === 0) {
     return res.render('carro', { carrito: [], total: 0, usuario: req.session.usuario });
   }
@@ -71,11 +73,12 @@ router.get('/carro/ver', async (req, res) => {
     }
 
     const total = nuevosCarrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
-
+    
     res.render('carro', {
       carrito: nuevosCarrito,
       total,
-      usuario: req.session.usuario
+      usuario: req.session.usuario,
+      mensaje_error
     });
   } catch (error) {
     console.error('Error al mostrar el carrito:', error);
@@ -275,5 +278,11 @@ router.post('/cancelar-pedido/:id', async (req, res) => {
     res.status(500).send('Error al cancelar el pedido');
   }
 });
+
+router.get('/webpay/anulado', (req, res) => {
+  req.session.mensaje_error = 'La compra fue anulada por el usuario.';
+  return res.redirect('/carro/ver');
+});
+
 
 module.exports = router;

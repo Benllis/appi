@@ -86,10 +86,16 @@
                         <a href="/gestion-pedidos" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             Ir a Gestión de Pedidos
                         </a>
-                         <a href="/admin/usuarios" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <% } %>
+
+                        <% if (usuario.id_rol === 1) { %>
+                        <a href="/admin/usuarios" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             Ir a Gestión de Usuarios
                         </a>
-                    <% } %>
+                        <a href="http://localhost:5000/cmf" target="_blank" rel="noopener" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            Consultar UF y Dólar
+                        </a>
+                        <% } %>
                     <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cerrar sesión</a>
                 </div>
             </div>

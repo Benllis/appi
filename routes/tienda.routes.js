@@ -5,7 +5,13 @@ const { checkRol } = require('../middlewares/auth');
 
 // Vista de productos (tienda)
 router.get('/tienda', async (req, res) => {
+  const usuario = req.session.usuario;
+  const esAdmin = usuario && usuario.id_rol === 1;
+
   try {
+    // Construcción dinámica del WHERE según el rol
+    const whereClause = esAdmin ? '1 = 1' : 'i.stock >= 0';
+
     const [productos] = await db.promise().query(`
       SELECT 
         p.id_producto,
@@ -17,7 +23,7 @@ router.get('/tienda', async (req, res) => {
         hp.valor AS precio,
         i.stock
       FROM PRODUCTO p
-      JOIN MARCA m ON p.id_marca = m.id_marca
+      LEFT JOIN MARCA m ON p.id_marca = m.id_marca
       JOIN (
         SELECT hp1.id_producto, hp1.valor
         FROM HISTORIAL_PRECIO hp1
@@ -28,7 +34,7 @@ router.get('/tienda', async (req, res) => {
         ) hp2 ON hp1.id_producto = hp2.id_producto AND hp1.fecha = hp2.fecha_max
       ) hp ON hp.id_producto = p.id_producto
       JOIN INVENTARIO i ON i.id_producto = p.id_producto
-      WHERE i.stock >= 0
+      WHERE ${whereClause}
     `);
 
     res.render('tienda', { productos, usuario: req.session.usuario });

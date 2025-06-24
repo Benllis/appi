@@ -28,8 +28,9 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <% productos.forEach(producto => { 
-           if (usuario && usuario.id_rol === 1 || producto.stock >= 0) {
+      <% productos.forEach(producto => {
+          const visible = (usuario && usuario.id_rol === 1) || producto.stock >= 0;
+          if (visible) {
       %>
         <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
           <div class="bg-gray-200 h-48 flex items-center justify-center">

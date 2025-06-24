@@ -52,13 +52,22 @@ def payment():
 @bp.route('/payment-result')
 def payment_result():
     token = request.args.get('token_ws')
+    tbk_token = request.args.get("TBK_TOKEN")
+    orden = request.args.get("TBK_ORDEN_COMPRA")
+    sesion = request.args.get("TBK_ID_SESION")
+
+    # 🚫 Si el usuario canceló la compra en WebPay
+    if not token and tbk_token:
+        current_app.logger.info("Pago anulado por el usuario")
+        return redirect("http://localhost:3000/webpay/anulado")
+
+    # ⚠️ Si no viene ningún token válido, error real
     if not token:
         return render_template('error.html', error="Token no proporcionado"), 400
 
+    # ✅ Si viene token, confirmar pago y redirigir
     try:
         response = WebpayService.commit_transaction(token)
-        
-        # Una vez validado, redirige al frontend Node.js
         return redirect(f"http://localhost:3000/webpay/confirmar?token_ws={token}&retiro_domicilio=1")
     except Exception as e:
         current_app.logger.error(f"Error en payment_result: {str(e)}")
