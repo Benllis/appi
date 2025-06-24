@@ -284,5 +284,9 @@ router.get('/webpay/anulado', (req, res) => {
   return res.redirect('/carro/ver');
 });
 
+router.get('/webpay/rechazado', (req, res) => {
+  req.session.mensaje_error = 'El pago fue rechazado. Intenta nuevamente con otro método.';
+  return res.redirect('/carro/ver');
+});
 
 module.exports = router;

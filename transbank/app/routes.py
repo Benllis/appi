@@ -68,6 +68,10 @@ def payment_result():
     # ✅ Si viene token, confirmar pago y redirigir
     try:
         response = WebpayService.commit_transaction(token)
+        if response['status'] != 'AUTHORIZED':
+            current_app.logger.warning(f"Pago rechazado. Estado: {response['status']}")
+            return redirect("http://localhost:3000/webpay/rechazado")  # Ruta en tu frontend para mostrar mensaje de rechazo
+
         return redirect(f"http://localhost:3000/webpay/confirmar?token_ws={token}&retiro_domicilio=1")
     except Exception as e:
         current_app.logger.error(f"Error en payment_result: {str(e)}")
