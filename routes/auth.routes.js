@@ -34,9 +34,43 @@ router.get('/perfil', async (req, res) => {
   }
 });
 
-router.get('/inicio', (req, res) => {
+router.get('/inicio', async (req, res) => {
   if (!req.session.usuario) return res.redirect('/login');
-  res.render('inicio', { usuario: req.session.usuario });
+
+  try {
+    const [productos] = await db.promise().query(`
+      SELECT 
+        p.id_producto,
+        p.nombre,
+        p.descripcion,
+        p.categoria,
+        p.subcategoria,
+        m.nombre AS marca,
+        hp.valor AS precio,
+        i.stock
+      FROM PRODUCTO p
+      LEFT JOIN MARCA m ON p.id_marca = m.id_marca
+      JOIN (
+        SELECT hp1.id_producto, hp1.valor
+        FROM HISTORIAL_PRECIO hp1
+        INNER JOIN (
+          SELECT id_producto, MAX(fecha) AS fecha_max
+          FROM HISTORIAL_PRECIO
+          GROUP BY id_producto
+        ) hp2 ON hp1.id_producto = hp2.id_producto AND hp1.fecha = hp2.fecha_max
+      ) hp ON hp.id_producto = p.id_producto
+      JOIN INVENTARIO i ON i.id_producto = p.id_producto
+      WHERE p.id_producto IN (1, 2, 3) AND i.stock > 0
+    `);
+
+    res.render('inicio', {
+      usuario: req.session.usuario,
+      productos
+    });
+  } catch (error) {
+    console.error('Error al cargar productos destacados en /inicio:', error);
+    res.status(500).send('Error al cargar productos destacados');
+  }
 });
 
 router.get('/logout', (req, res) => {

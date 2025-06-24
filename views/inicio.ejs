@@ -108,97 +108,62 @@
     <section class="max-w-6xl mx-auto my-8 px-10">
         <h2 class="text-2xl font-bold mb-6">Productos Destacados</h2>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Producto 1 -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div class="bg-gray-200 h-48 flex items-center justify-center">
-                    <i class="fas fa-tools text-4xl text-gray-400"></i>
-                </div>
-                
-                <div class="p-5">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Martillo Profesional</h3>
-                    
-                    <div class="flex items-center mb-4">
-                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded mr-3">
-                            Stanley
-                        </span>
-                        <span class="text-sm text-gray-500">
-                            Herramientas / Martillos
-                        </span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-2xl font-bold text-gray-800">$24.990</span>
-                        <span class="text-sm text-green-600">15 disponibles</span>
-                    </div>
-                    
-                    <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md font-medium transition-colors flex items-center justify-center">
-                        <i class="fas fa-cart-plus mr-2"></i>
-                        Agregar al carrito
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Producto 2 -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div class="bg-gray-200 h-48 flex items-center justify-center">
-                    <i class="fas fa-bolt text-4xl text-gray-400"></i>
-                </div>
-                
-                <div class="p-5">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Taladro Percutor 750W</h3>
-                    
-                    <div class="flex items-center mb-4">
-                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded mr-3">
-                            Bosch
-                        </span>
-                        <span class="text-sm text-gray-500">
-                            Herramientas / Taladros
-                        </span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-2xl font-bold text-gray-800">$89.990</span>
-                        <span class="text-sm text-green-600">8 disponibles</span>
-                    </div>
-                    
-                    <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md font-medium transition-colors flex items-center justify-center">
-                        <i class="fas fa-cart-plus mr-2"></i>
-                        Agregar al carrito
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Producto 3 -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div class="bg-gray-200 h-48 flex items-center justify-center">
-                    <i class="fas fa-ruler-combined text-4xl text-gray-400"></i>
-                </div>
-                
-                <div class="p-5">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Juego de Llaves Mixtas</h3>
-                    
-                    <div class="flex items-center mb-4">
-                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded mr-3">
-                            Bahco
-                        </span>
-                        <span class="text-sm text-gray-500">
-                            Herramientas / Llaves
-                        </span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-2xl font-bold text-gray-800">$35.500</span>
-                        <span class="text-sm text-green-600">22 disponibles</span>
-                    </div>
-                    
-                    <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md font-medium transition-colors flex items-center justify-center">
-                        <i class="fas fa-cart-plus mr-2"></i>
-                        Agregar al carrito
-                    </button>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <% productos.forEach(producto => { %>
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        <div class="bg-gray-200 h-48 flex items-center justify-center">
+            <i class="fas fa-box-open text-4xl text-gray-400"></i>
         </div>
+
+        <div class="p-5">
+            <div class="flex justify-between items-start mb-2">
+            <h3 class="text-xl font-bold text-gray-800"><%= producto.nombre %></h3>
+            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                <%= producto.marca %>
+            </span>
+            </div>
+
+            <p class="text-gray-600 text-sm mb-4 line-clamp-2"><%= producto.descripcion %></p>
+
+            <div class="flex justify-between items-center mb-4">
+            <span class="text-2xl font-bold text-gray-800">$<%= producto.precio.toLocaleString() %></span>
+            <span class="text-sm <%= producto.stock > 0 ? 'text-green-600' : 'text-red-600' %>">
+                <%= producto.stock > 0 ? `${producto.stock} disponibles` : 'Agotado' %>
+            </span>
+            </div>
+
+            <div class="space-y-3">
+                <% if (producto.stock > 0) { %>
+                    <form method="POST" action="/carro/agregar" class="flex items-center gap-2">
+                    <input type="hidden" name="id_producto" value="<%= producto.id_producto %>">
+                    <input 
+                        type="number" 
+                        name="cantidad" 
+                        min="1" 
+                        max="<%= producto.stock %>" 
+                        value="1"
+                        class="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                    <button 
+                        type="submit" 
+                        class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition-colors flex items-center justify-center"
+                    >
+                        <i class="fas fa-cart-plus mr-2"></i>
+                        Añadir
+                    </button>
+                    </form>
+                <% } else { %>
+                    <div class="bg-red-50 text-red-700 px-4 py-2 rounded-md text-center">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    Sin stock
+                    </div>
+                <% } %>
+                </div>
+            </div>
+            </div>
+        <% }) %>
+        </div>
+
     </section>
 
     <section class="flex justify-between items-center max-w-6xl mx-auto my-5 px-6 py-5 bg-white rounded-xl shadow-sm">
