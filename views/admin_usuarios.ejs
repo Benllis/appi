@@ -2,39 +2,50 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Lista de Usuarios</title>
+  <title>Gestión de Usuarios</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>Usuarios</h1>
-  <table border="1">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Correo</th>
-        <th>Rol Actual</th>
-        <th>Cambiar Rol</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% usuarios.forEach(usuario => { %>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+  <div class="container mx-auto px-6 py-10">
+    <h1 class="text-3xl font-bold mb-8 text-gray-800">Lista de Usuarios</h1>
+
+    <table class="min-w-full bg-white rounded-lg shadow overflow-hidden">
+      <thead class="bg-indigo-600 text-white">
         <tr>
-          <td><%= usuario.pnombre %></td>
-          <td><%= usuario.appaterno %></td>
-          <td><%= usuario.correo %></td>
-          <td><%= usuario.name_rol %></td>
-          <td>
-            <form method="POST" action="/usuarios/admin/usuarios/<%= usuario.id_usuario %>/cambiar-rol">
-            <select name="nuevo_rol_id">
-              <% roles.forEach(rol => { %>
-                <option value="<%= rol.id_rol %>" <%= rol.id_rol === usuario.id_rol ? 'selected' : '' %>><%= rol.name_rol %></option>
-              <% }) %>
-            </select>
-          </form>
-          </td>
+          <th class="text-left py-3 px-6">Nombre</th>
+          <th class="text-left py-3 px-6">Apellido</th>
+          <th class="text-left py-3 px-6">Correo</th>
+          <th class="text-left py-3 px-6">Rol Actual</th>
+          <th class="text-left py-3 px-6">Cambiar Rol</th>
         </tr>
-      <% }); %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% usuarios.forEach(usuario => { %>
+          <tr class="border-b border-gray-200 hover:bg-gray-50">
+            <td class="py-4 px-6"><%= usuario.pnombre %></td>
+            <td class="py-4 px-6"><%= usuario.appaterno %></td>
+            <td class="py-4 px-6"><%= usuario.correo %></td>
+            <td class="py-4 px-6 font-semibold"><%= usuario.name_rol %></td>
+            <td class="py-4 px-6">
+              <form action="/admin/usuarios/<%= usuario.id_usuario %>/cambiar-rol" method="POST" class="flex space-x-2 items-center">
+                <select name="nuevo_rol_id" class="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <% roles.forEach(rol => { %>
+                    <option value="<%= rol.id_rol %>" <%= rol.id_rol === usuario.id_rol ? 'selected' : '' %>>
+                      <%= rol.name_rol %>
+                    </option>
+                  <% }); %>
+                </select>
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1 rounded transition">
+                  Guardar
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
 </body>
 </html>
